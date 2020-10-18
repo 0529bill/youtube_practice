@@ -44,6 +44,10 @@ class App extends Component {
             YoutubeSearch
           </h1>
           <Dropdowns onDropDown={this.onDropDown} />
+          <p>
+            hints: after you click sorting button, you have to click 'video'
+            button
+          </p>
           <SearchBar onDropDown={this.state.dropdownStatus} />
         </Container>
       </div>

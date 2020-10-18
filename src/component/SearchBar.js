@@ -10,6 +10,8 @@ class SearchBar extends Component {
     secretApproved: '',
     secretClick: false,
     finalTest: false,
+    password: '',
+    onFlora: false,
   };
 
   onInputChange = (event) => {
@@ -25,7 +27,7 @@ class SearchBar extends Component {
       let respond = await youtube.get('/search', {
         params: {
           q: this.state.term,
-          maxResults: 15,
+          maxResults: 5,
           order: `${this.props.onDropDown}`,
         },
       });
@@ -37,7 +39,7 @@ class SearchBar extends Component {
       let respond = await youtube.get('/search', {
         params: {
           channelId: 'UCuwY9m7KrbU6fEHSjrTDB5w',
-          maxResults: 15,
+          maxResults: 5,
         },
       });
 
@@ -48,7 +50,7 @@ class SearchBar extends Component {
       let respond = await youtube.get('/search', {
         params: {
           q: this.state.term,
-          maxResults: 15,
+          maxResults: 5,
         },
       });
 
@@ -69,6 +71,8 @@ class SearchBar extends Component {
             (event) =>
               this.setState({
                 secretApproved: event.target.value,
+                onFlora: true,
+                data: [],
               })
 
             // event.target.value === '1111'
@@ -83,33 +87,35 @@ class SearchBar extends Component {
 
   onSecretClick = () => {
     if (this.state.secretApproved == '1111') {
-      return this.setState({
-        secretClick: true,
-      });
+      return (
+        alert('Good job babe! you got one more to go!'),
+        this.setState({
+          secretClick: true,
+        })
+      );
     } else console.log('secretApproved', this.state.secretApproved);
   };
 
-  handleSecretClick = (event) => {
-    let newEvent = event.target.value.trim().toLowerCase();
-    console.log(newEvent);
-    if (newEvent === 'i love you') {
-      console.log('hi');
+  handleSecretClick = () => {
+    // let newEvent = event.target.value.trim().toLowerCase();
+    // console.log(newEvent);
+    if (this.state.password === 'i love you') {
+      alert('Awwwwww!  love you too!');
       fetch = async () => {
         let respond = await youtube.get('/search', {
           params: {
             channelId: 'UCuwY9m7KrbU6fEHSjrTDB5w',
-            maxResults: 15,
+            maxResults: 5,
           },
         });
 
         this.setState({
           data: respond.data.items,
         });
-        console.log(this.state.data);
       };
       fetch();
     } else {
-      return null;
+      return alert('try again babe');
     }
   };
 
@@ -118,9 +124,12 @@ class SearchBar extends Component {
       <div>
         <input
           className="m-3"
-          placeholder="hints: type in the magic words"
+          placeholder="type in the magic words"
           onChange={
-            (event) => this.handleSecretClick(event)
+            (event) =>
+              this.setState({
+                password: event.target.value.trim().toLowerCase(),
+              })
 
             // event.target.value ===
             //   ? this.setState({ secretApproved: true })
@@ -132,31 +141,30 @@ class SearchBar extends Component {
     );
   };
 
-  // onSecretClick2 = () => {
-  //   if (this.state.secretApproved == '1111') {
-  //     return this.setState({
-  //       secretClick: true,
-  //     });
-  //   } else console.log('secretApproved', this.state.secretApproved);
-  // };
-
   render() {
     return (
       <>
-        <input
-          style={{ width: '50vw', height: '40px' }}
-          className="m-3"
-          type="text"
-          placeholder="type something.."
-          onChange={this.onInputChange}
-        />
+        <div>
+          {this.props.onDropDown == 'flora芙蘿拉' ? null : (
+            <input
+              style={{ width: '50vw', height: '40px' }}
+              className="m-3"
+              type="text"
+              placeholder="type something.."
+              onChange={this.onInputChange}
+            />
+          )}
+          {this.props.onDropDown == 'flora芙蘿拉' ? null : (
+            <Button onClick={this.onButtonClick}>video</Button>
+          )}
+        </div>
         <div>
           {this.props.onDropDown == 'flora芙蘿拉'
             ? this.onSecretChange()
             : null}
         </div>
         <div>{this.state.secretClick ? this.onFinalChange() : null}</div>
-        <Button onClick={this.onButtonClick}>video</Button>
+
         <CardData props={this.state.data} />
       </>
     );
